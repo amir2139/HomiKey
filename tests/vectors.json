@@ -1,0 +1,209 @@
+{
+  "$comment": "Shared conversion cases. Read by tests/HomiKey.Core.Tests and web/test.mjs.",
+  "cases": [
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "sghl",
+      "expected": "سلام"
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "اثممخ",
+      "expected": "hello"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "sghl o,fd?",
+      "expected": "سلام خوبی؟"
+    },
+    {
+      "layout": "standard",
+      "direction": "persianToLatin",
+      "input": "سلام خوبی؟",
+      "expected": "sghl o,fd?"
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "ldBo,hil",
+      "expected": "می\u200Cخواهم"
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "می\u200Cخواهم",
+      "expected": "ldBo,hil"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "mnv",
+      "expected": "پدر"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "C",
+      "expected": "ژ"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "?",
+      "expected": "؟"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "&",
+      "expected": "،"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "\"",
+      "expected": "؛"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "L",
+      "expected": "«"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "K",
+      "expected": "»"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "1402",
+      "expected": "۱۴۰۲"
+    },
+    {
+      "layout": "standard",
+      "direction": "persianToLatin",
+      "input": "۱۴۰۲",
+      "expected": "1402"
+    },
+    {
+      "layout": "standard",
+      "direction": "persianToLatin",
+      "input": "١٢٣",
+      "expected": "123"
+    },
+    {
+      "layout": "standard",
+      "direction": "latinToPersian",
+      "input": "(hi)",
+      "expected": ")اه("
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "thvsd",
+      "expected": "فارسی"
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "hello سلام",
+      "expected": "اثممخ سلام"
+    },
+    {
+      "layout": "standard",
+      "direction": "auto",
+      "input": "سلام دنیا hi",
+      "expected": "sghl nkdh hi"
+    },
+    {
+      "layout": "standard",
+      "direction": "persianToLatin",
+      "input": "پ",
+      "expected": "m"
+    },
+    {
+      "layout": "standard",
+      "direction": "persianToLatin",
+      "input": "ئ",
+      "expected": "S"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "\\nv",
+      "expected": "پدر"
+    },
+    {
+      "layout": "legacy",
+      "direction": "auto",
+      "input": "sghl",
+      "expected": "سلام"
+    },
+    {
+      "layout": "legacy",
+      "direction": "auto",
+      "input": "اثممخ",
+      "expected": "hello"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "m",
+      "expected": "ئ"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "T",
+      "expected": "،"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "Y",
+      "expected": "؛"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "100R",
+      "expected": "۱۰۰ريال"
+    },
+    {
+      "layout": "legacy",
+      "direction": "persianToLatin",
+      "input": "۱۰۰ريال",
+      "expected": "100R"
+    },
+    {
+      "layout": "legacy",
+      "direction": "persianToLatin",
+      "input": "پ",
+      "expected": "\\"
+    },
+    {
+      "layout": "legacy",
+      "direction": "persianToLatin",
+      "input": "ئ",
+      "expected": "m"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "K",
+      "expected": "«"
+    },
+    {
+      "layout": "legacy",
+      "direction": "latinToPersian",
+      "input": "G",
+      "expected": "ۀ"
+    }
+  ]
+}
