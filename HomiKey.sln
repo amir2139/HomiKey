@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C06326F0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomiKey.Core.Tests", "tests\HomiKey.Core.Tests\HomiKey.Core.Tests.csproj", "{45CA6149-EBE3-4EBC-8A6A-521EA7B10967}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomiKey.App", "src\HomiKey.App\HomiKey.App.csproj", "{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{45CA6149-EBE3-4EBC-8A6A-521EA7B10967}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45CA6149-EBE3-4EBC-8A6A-521EA7B10967}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45CA6149-EBE3-4EBC-8A6A-521EA7B10967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8B6AEC1D-776A-4CA8-9E9A-47BAA9F9C9D4} = {814B95CC-6967-4D1C-A10B-4ABB21DBAC85}
 		{45CA6149-EBE3-4EBC-8A6A-521EA7B10967} = {C06326F0-C717-43EA-8AE4-0CCFFF204C07}
+		{49C5A0D3-A718-4FCA-B6B6-F3713F26C2DB} = {814B95CC-6967-4D1C-A10B-4ABB21DBAC85}
 	EndGlobalSection
 EndGlobal

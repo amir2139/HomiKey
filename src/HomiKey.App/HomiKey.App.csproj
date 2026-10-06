@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- Lets the project build (not run) on Linux/macOS, e.g. for quick CI checks. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>HomiKey.App</RootNamespace>
+    <AssemblyName>HomiKey</AssemblyName>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationVisualStyles>true</ApplicationVisualStyles>
+    <ApplicationIcon>Assets\homikey.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>en;fa</SatelliteResourceLanguages>
+    <Description>Fix text typed in the wrong keyboard layout (Persian/English) with one hotkey.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PublishSingleFile)' == 'true'">
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HomiKey.Core\HomiKey.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\homikey.ico" LogicalName="HomiKey.Assets.homikey.ico" />
+    <EmbeddedResource Include="Assets\homikey-off.ico" LogicalName="HomiKey.Assets.homikey-off.ico" />
+    <EmbeddedResource Include="Assets\Fonts\Vazirmatn-Regular.ttf" LogicalName="HomiKey.Assets.Vazirmatn-Regular.ttf" />
+    <EmbeddedResource Include="Assets\Fonts\Vazirmatn-Bold.ttf" LogicalName="HomiKey.Assets.Vazirmatn-Bold.ttf" />
+    <None Include="Assets\Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" Link="Vazirmatn-OFL.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <StronglyTypedFileName>$(IntermediateOutputPath)Strings.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>HomiKey.App.Resources</StronglyTypedNamespace>
+      <StronglyTypedClassName>Strings</StronglyTypedClassName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

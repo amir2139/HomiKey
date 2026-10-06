@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>HomiKey</value>
+    <comment>Product name. Not translated.</comment>
+  </data>
+  <data name="TrayTooltip" xml:space="preserve">
+    <value>HomiKey: press {0} to fix the layout</value>
+    <comment>{0} is the hotkey. Max 127 characters.</comment>
+  </data>
+  <data name="TrayTooltipPaused" xml:space="preserve">
+    <value>HomiKey (paused)</value>
+  </data>
+  <data name="MenuEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="MenuSettings" xml:space="preserve">
+    <value>Settings…</value>
+  </data>
+  <data name="MenuLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LanguageSystem" xml:space="preserve">
+    <value>System default</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+    <comment>Always shown in English.</comment>
+  </data>
+  <data name="LanguagePersian" xml:space="preserve">
+    <value>فارسی</value>
+    <comment>Always shown in Persian.</comment>
+  </data>
+  <data name="MenuRunAtStartup" xml:space="preserve">
+    <value>Run at startup</value>
+  </data>
+  <data name="MenuAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="MenuExit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="WelcomeBalloon" xml:space="preserve">
+    <value>HomiKey is running in the notification area. Select text typed in the wrong layout and press {0}.</value>
+    <comment>{0} is the hotkey.</comment>
+  </data>
+  <data name="HotkeyRegisterFailed" xml:space="preserve">
+    <value>The hotkey {0} is in use by another program. Choose a different one in Settings.</value>
+    <comment>{0} is the hotkey.</comment>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About HomiKey</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>HomiKey {0}
+
+Fixes text typed in the wrong keyboard layout (Persian ↔ English).
+
+Free and open source under the MIT license.
+No telemetry and no network access.
+
+Persian interface font: Vazirmatn, SIL Open Font License 1.1.</value>
+    <comment>{0} is the version.</comment>
+  </data>
+  <data name="SettingsSaveFailed" xml:space="preserve">
+    <value>Settings could not be saved.
+
+{0}</value>
+    <comment>{0} is the error message.</comment>
+  </data>
+  <data name="StartupFailed" xml:space="preserve">
+    <value>The startup setting could not be changed.
+
+{0}</value>
+    <comment>{0} is the error message.</comment>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>HomiKey Settings</value>
+  </data>
+  <data name="GroupGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="LabelLanguage" xml:space="preserve">
+    <value>Interface language:</value>
+  </data>
+  <data name="CheckEnabled" xml:space="preserve">
+    <value>Enable HomiKey</value>
+  </data>
+  <data name="CheckRunAtStartup" xml:space="preserve">
+    <value>Run HomiKey when I sign in to Windows</value>
+  </data>
+  <data name="GroupHotkeys" xml:space="preserve">
+    <value>Hotkeys</value>
+  </data>
+  <data name="LabelConvertHotkey" xml:space="preserve">
+    <value>Convert selected text:</value>
+  </data>
+  <data name="LabelLastWordHotkey" xml:space="preserve">
+    <value>Convert last word:</value>
+  </data>
+  <data name="CheckLastWordWhenNothingSelected" xml:space="preserve">
+    <value>If nothing is selected, convert the last typed word</value>
+  </data>
+  <data name="HotkeyNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="HotkeyPrompt" xml:space="preserve">
+    <value>Press the new key combination…</value>
+  </data>
+  <data name="ButtonClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ButtonReset" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="GroupConversion" xml:space="preserve">
+    <value>Conversion</value>
+  </data>
+  <data name="LabelPersianLayout" xml:space="preserve">
+    <value>My Persian keyboard layout:</value>
+  </data>
+  <data name="LayoutStandard" xml:space="preserve">
+    <value>Persian Standard (ISIRI 9147)</value>
+  </data>
+  <data name="LayoutLegacy" xml:space="preserve">
+    <value>Persian (old Windows layout)</value>
+  </data>
+  <data name="CheckSwitchLanguage" xml:space="preserve">
+    <value>Switch the input language after converting</value>
+  </data>
+  <data name="CheckConvertDigits" xml:space="preserve">
+    <value>Convert digits (123 ↔ ۱۲۳)</value>
+  </data>
+  <data name="GroupExcluded" xml:space="preserve">
+    <value>Don't run in these programs</value>
+  </data>
+  <data name="ExcludedPlaceholder" xml:space="preserve">
+    <value>Program name, e.g. notepad.exe</value>
+  </data>
+  <data name="ButtonAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ButtonAddRunning" xml:space="preserve">
+    <value>Running programs ▾</value>
+  </data>
+  <data name="ButtonRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="NoRunningApps" xml:space="preserve">
+    <value>(none)</value>
+  </data>
+  <data name="GroupTry" xml:space="preserve">
+    <value>Try it</value>
+  </data>
+  <data name="TryPlaceholder" xml:space="preserve">
+    <value>Type here, e.g. sghl</value>
+  </data>
+  <data name="TryResultLabel" xml:space="preserve">
+    <value>Result:</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="HotkeyInvalid" xml:space="preserve">
+    <value>“{0}” cannot be used as a hotkey. Use Ctrl, Alt or Win together with a key, or a function key.</value>
+    <comment>{0} is the hotkey.</comment>
+  </data>
+  <data name="HotkeysSame" xml:space="preserve">
+    <value>The two hotkeys must be different.</value>
+  </data>
+  <data name="ConvertHotkeyRequired" xml:space="preserve">
+    <value>The convert hotkey cannot be empty.</value>
+  </data>
+</root>
