@@ -47,6 +47,14 @@ jobs:
         run: |
           $tag = "${{ github.ref_name }}"
           $files = (Get-ChildItem artifacts).FullName
-          $extra = @()
-          if ($tag -match "-") { $extra += "--prerelease" }
-          gh release create $tag @files --title "HomiKey $tag" --generate-notes @extra
+          # The release may already exist when the tag was created from the GitHub web UI
+          # ("Draft a new release"); then only the files are attached.
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag @files --clobber
+          } else {
+            $extra = @()
+            if ($tag -match "-") { $extra += "--prerelease" }
+            gh release create $tag @files --title "HomiKey $tag" --generate-notes @extra
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
