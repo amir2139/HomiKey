@@ -30,7 +30,7 @@ Select it, press **Ctrl+Shift+Space**, and HomiKey retypes it as if the right la
 - **One hotkey, any app.** Converts the selected text in Notepad, Word, browsers, chat apps and anything else that supports copy and paste. The default hotkey is Ctrl+Shift+Space, and you can change it.
 - **Detects the direction.** HomiKey looks at which script most of the text is in and converts Latin → Persian or Persian → Latin on its own. In mixed text, only the wrong-layout part changes.
 - **Press again to undo.** A second press within 30 seconds puts back exactly what was there before.
-- **Last word.** With nothing selected, the hotkey fixes the word you just typed. There is also a separate last-word hotkey (Pause by default).
+- **Nothing selected? It finds the mistake.** With nothing selected, the hotkey goes back from the cursor over every word typed in the wrong layout and fixes them together: `چطوری sghl phgj` becomes `چطوری سلام حالت`. It stops at a word in the other language, the start of the line, or a word ending in `.` or `!`. A separate last-word hotkey (Pause by default) fixes only the last word.
 - **Persian layouts.** Supports the standard Persian layout (ISIRI 9147), the old Windows Persian layout and US QWERTY, including Shift keys, the half-space (ZWNJ), Persian digits ۰–۹ and the punctuation ، ؛ ؟ « ». HomiKey works out which Persian layout you have installed.
 - **Optional language switch.** Can switch the Windows input language to match the text it just produced.
 - **Your clipboard stays yours.** HomiKey saves the clipboard, uses it briefly, then restores it. Its temporary text is kept out of Windows clipboard history (Win+V).
@@ -56,7 +56,7 @@ The exe is not code-signed, so Windows SmartScreen may warn you the first time. 
 |---|---|
 | Select text, press **Ctrl+Shift+Space** | The selection is converted |
 | Press **Ctrl+Shift+Space** again | The original text comes back |
-| Press **Ctrl+Shift+Space** with nothing selected | The last word you typed is converted |
+| Press **Ctrl+Shift+Space** with nothing selected | The words before the cursor that were typed in the wrong layout are converted |
 | Press **Pause** | The last word you typed is converted |
 | Double-click the tray icon | Settings |
 | Right-click the tray icon | Turn HomiKey on/off, language, run at startup, exit |
@@ -124,8 +124,11 @@ In a terminal, Ctrl+C with nothing selected stops the running program. Remove th
 **In a code editor with nothing selected, a whole line gets duplicated.**
 These editors copy the whole line when you press Ctrl+C with nothing selected. HomiKey recognizes this in Visual Studio and VS Code and converts the last word instead. Other editors that do the same (for example JetBrains IDEs) are not recognized; select the text first there, or turn the line copy off in the editor's settings.
 
-**Converting the last word removed formatting in Word.**
-To fix the last word, HomiKey selects back to the start of the line and pastes that span back with only the last word changed. This behaves the same in left-to-right and right-to-left text, but in rich editors the pasted part is plain text. Select the word first to keep formatting.
+**With nothing selected, it converted words I had typed correctly.**
+HomiKey tells the two layouts apart by script, not with a dictionary. So when a correct word and a wrong one are in the same script, for example `I said sghl` (meant as "I said سلام"), it can't know where the mistake starts and converts both. Press **Pause** to convert only the last word, or select the text you want converted.
+
+**Converting without a selection removed formatting in Word.**
+To fix the words before the cursor, HomiKey selects back to the start of the line and pastes that span back with only the converted words changed. This behaves the same in left-to-right and right-to-left text, but in rich editors the pasted part is plain text. Select the words first to keep formatting.
 
 **My antivirus doesn't like it.**
 Programs that send keystrokes to other programs sometimes get flagged. HomiKey only sends Ctrl+C, Ctrl+V and Shift+Home, and only when you press its hotkey. The source is here, and you can build the exe yourself.

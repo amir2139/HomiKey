@@ -6,6 +6,16 @@ namespace HomiKey.Core;
 /// <param name="IsRevert">True when this undoes the previous conversion.</param>
 public sealed record ConversionResult(string Replacement, LayoutScript OutputScript, bool IsRevert);
 
+/// <summary>How much of the text before the caret a no-selection conversion takes.</summary>
+public enum BeforeCaretScope
+{
+    /// <summary>Only the last word.</summary>
+    LastWord,
+
+    /// <summary>All the words at the end that were typed on the wrong layout (see <see cref="WrongLayoutRun"/>).</summary>
+    WrongLayoutRun,
+}
+
 /// <summary>
 /// Everything the hotkeys need, independent of how text is read from and written to
 /// other apps: auto-detected conversion, last-word conversion, and revert on a second press.
@@ -62,11 +72,11 @@ public sealed class ConversionEngine
 
     /// <summary>
     /// Works on the text between the start of the line and the caret, when nothing is selected.
-    /// If it ends with what the last conversion produced, that ending is put back; otherwise only
-    /// the last word is converted. The result replaces the whole text that was passed in.
-    /// Returns null when nothing would change.
+    /// If it ends with what the last conversion produced, that ending is put back; otherwise the
+    /// last word, or the run of wrong-layout words at the end, is converted. The result replaces
+    /// the whole text that was passed in. Returns null when nothing would change.
     /// </summary>
-    public ConversionResult? ConvertBeforeCaret(string textBeforeCaret, DateTimeOffset now)
+    public ConversionResult? ConvertBeforeCaret(string textBeforeCaret, DateTimeOffset now, BeforeCaretScope scope = BeforeCaretScope.LastWord)
     {
         ArgumentNullException.ThrowIfNull(textBeforeCaret);
 
@@ -77,8 +87,11 @@ public sealed class ConversionEngine
         }
 
         var direction = ConversionDirection.LatinToPersian;
-        if (!LastWord.TryReplace(textBeforeCaret, word => _converter.Convert(word, out direction), out var result, out var originalTail, out var convertedTail))
-            return null;
+        string result, originalTail, convertedTail;
+        var found = scope == BeforeCaretScope.WrongLayoutRun
+            ? WrongLayoutRun.TryReplace(textBeforeCaret, _converter, out result, out originalTail, out convertedTail, out direction)
+            : LastWord.TryReplace(textBeforeCaret, word => _converter.Convert(word, out direction), out result, out originalTail, out convertedTail);
+        if (!found) return null;
         if (originalTail == convertedTail) return null;
 
         Remember(originalTail, convertedTail, direction, now);

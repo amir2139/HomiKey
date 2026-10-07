@@ -111,7 +111,7 @@ Persian interface font: Vazirmatn, SIL Open Font License 1.1.</value>
     <value>Convert last word:</value>
   </data>
   <data name="CheckLastWordWhenNothingSelected" xml:space="preserve">
-    <value>If nothing is selected, convert the last typed word</value>
+    <value>If nothing is selected, convert the words before the cursor that were typed in the wrong layout</value>
   </data>
   <data name="HotkeyNone" xml:space="preserve">
     <value>None</value>

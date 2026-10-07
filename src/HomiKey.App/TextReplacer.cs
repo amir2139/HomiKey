@@ -24,7 +24,7 @@ internal sealed class TextReplacer
 
     public enum Mode
     {
-        /// <summary>Convert the selection; with no selection, optionally the last word.</summary>
+        /// <summary>Convert the selection; with no selection, optionally the wrong-layout words before the caret.</summary>
         Selection,
 
         /// <summary>Convert the last word before the caret.</summary>
@@ -107,7 +107,10 @@ internal sealed class TextReplacer
         // whole line; converting that would paste a second copy of the line.
         if (beforeCaret.Length == 0 || ClipboardSnapshot.IsEditorLineCopy()) return null;
 
-        var converted = _engine.ConvertBeforeCaret(beforeCaret, now);
+        // The convert hotkey with nothing selected takes every wrong-layout word at the end;
+        // the last-word hotkey takes just one, for when the words before it were meant as typed.
+        var scope = mode == Mode.Selection ? BeforeCaretScope.WrongLayoutRun : BeforeCaretScope.LastWord;
+        var converted = _engine.ConvertBeforeCaret(beforeCaret, now, scope);
         // Nothing to convert: paste the same text back so the selection made above goes away
         // and the caret ends where it was.
         return converted is null ? (beforeCaret, null) : (converted.Replacement, converted.OutputScript);

@@ -99,6 +99,45 @@ public class ConversionEngineTests
     }
 
     [Fact]
+    public void ConvertsTheWholeWrongLayoutRunBeforeTheCaret()
+    {
+        var engine = new ConversionEngine();
+        var result = engine.ConvertBeforeCaret("چطوری sghl phgj", T0, BeforeCaretScope.WrongLayoutRun)!;
+        Assert.Equal("چطوری سلام حالت", result.Replacement);
+        Assert.Equal(LayoutScript.Persian, result.OutputScript);
+        Assert.False(result.IsRevert);
+    }
+
+    [Fact]
+    public void SecondPressRevertsTheWholeRun()
+    {
+        var engine = new ConversionEngine();
+        var first = engine.ConvertBeforeCaret("چطوری sghl phgj ", T0, BeforeCaretScope.WrongLayoutRun)!;
+        var second = engine.ConvertBeforeCaret(first.Replacement, T0.AddSeconds(29), BeforeCaretScope.WrongLayoutRun)!;
+        Assert.True(second.IsRevert);
+        Assert.Equal("چطوری sghl phgj ", second.Replacement);
+        Assert.Equal(LayoutScript.Latin, second.OutputScript);
+    }
+
+    [Fact]
+    public void RunRevertExpiresAfter30Seconds()
+    {
+        var engine = new ConversionEngine();
+        var first = engine.ConvertBeforeCaret("sghl phgj", T0, BeforeCaretScope.WrongLayoutRun)!;
+        var later = engine.ConvertBeforeCaret(first.Replacement, T0.AddSeconds(31), BeforeCaretScope.WrongLayoutRun)!;
+        Assert.False(later.IsRevert);
+        Assert.Equal("sghl phgj", later.Replacement);
+    }
+
+    [Fact]
+    public void LastWordScopeStillTakesOneWord()
+    {
+        var engine = new ConversionEngine();
+        var result = engine.ConvertBeforeCaret("چطوری sghl phgj", T0, BeforeCaretScope.LastWord)!;
+        Assert.Equal("چطوری sghl حالت", result.Replacement);
+    }
+
+    [Fact]
     public void SelectionConversionCanBeRevertedFromBeforeTheCaret()
     {
         // After pasting, the selection is gone and the caret sits after the pasted text.

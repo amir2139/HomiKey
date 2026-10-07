@@ -102,7 +102,7 @@
     <value>تبدیل آخرین کلمه:</value>
   </data>
   <data name="CheckLastWordWhenNothingSelected" xml:space="preserve">
-    <value>اگر چیزی انتخاب نشده بود، آخرین کلمهٔ تایپ‌شده تبدیل شود</value>
+    <value>اگر چیزی انتخاب نشده بود، کلمه‌های پیش از مکان‌نما که با زبان اشتباه تایپ شده‌اند تبدیل شوند</value>
   </data>
   <data name="HotkeyNone" xml:space="preserve">
     <value>هیچ</value>
