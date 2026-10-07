@@ -103,7 +103,9 @@ internal sealed class TextReplacer
         // app missed the copy, which would leave the Shift+Home selection behind for the next
         // keystroke to overwrite, so ask once more with more time.
         if (beforeCaret.Length == 0) beforeCaret = await CopyAsync(RetryCopyTimeout, KeyboardInput.CtrlC);
-        if (beforeCaret.Length == 0) return null;
+        // At the start of a line Shift+Home selects nothing, and a code editor then copies the
+        // whole line; converting that would paste a second copy of the line.
+        if (beforeCaret.Length == 0 || ClipboardSnapshot.IsEditorLineCopy()) return null;
 
         var converted = _engine.ConvertBeforeCaret(beforeCaret, now);
         // Nothing to convert: paste the same text back so the selection made above goes away
