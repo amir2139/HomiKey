@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Fix text typed in the wrong keyboard layout, Persian ↔ English.">
+  <meta name="color-scheme" content="light dark">
+  <title>HomiKey</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <div class="brand">
+        <img src="favicon.png" alt="" width="40" height="40">
+        <div>
+          <h1 data-i18n="title"></h1>
+          <p class="tagline" data-i18n="tagline"></p>
+        </div>
+      </div>
+      <button type="button" id="lang" class="ghost" data-i18n="switchLanguage"></button>
+    </header>
+
+    <section class="card">
+      <div class="controls">
+        <fieldset class="segmented" id="direction">
+          <legend data-i18n="direction"></legend>
+          <label><input type="radio" name="direction" value="auto" checked><span data-i18n="dirAuto"></span></label>
+          <label><input type="radio" name="direction" value="latinToPersian"><span data-i18n="dirToPersian"></span></label>
+          <label><input type="radio" name="direction" value="persianToLatin"><span data-i18n="dirToEnglish"></span></label>
+        </fieldset>
+        <label class="field">
+          <span data-i18n="layout"></span>
+          <select id="layout">
+            <option value="standard" data-i18n="layoutStandard"></option>
+            <option value="legacy" data-i18n="layoutLegacy"></option>
+          </select>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="digits" checked>
+          <span data-i18n="convertDigits"></span>
+        </label>
+      </div>
+
+      <div class="panes">
+        <label class="pane">
+          <span class="pane-label" data-i18n="inputLabel"></span>
+          <textarea id="input" rows="6" spellcheck="false" autocomplete="off" dir="auto" data-i18n-placeholder="inputPlaceholder"></textarea>
+        </label>
+        <div class="pane">
+          <span class="pane-label" data-i18n="outputLabel"></span>
+          <output id="output" for="input" dir="auto"></output>
+          <p class="detected" id="detected" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="copy" class="primary" data-i18n="copy"></button>
+        <button type="button" id="swap" data-i18n="useAsInput"></button>
+        <button type="button" id="clear" class="ghost" data-i18n="clear"></button>
+      </div>
+    </section>
+
+    <section class="app">
+      <p data-i18n="appPitch"></p>
+      <div class="links">
+        <a class="button primary" href="https://github.com/amir2139/HomiKey/releases/latest" data-i18n="download"></a>
+        <a class="button ghost" href="https://github.com/amir2139/HomiKey" data-i18n="source"></a>
+      </div>
+    </section>
+
+    <footer>
+      <p data-i18n="privacy"></p>
+    </footer>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

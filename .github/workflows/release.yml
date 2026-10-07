@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Test
+        run: dotnet test --configuration Release
+
+      - name: Publish self-contained single-file exe
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart("v")
+          dotnet publish src/HomiKey.App/HomiKey.App.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:Version=$version `
+            --output publish
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          $exe = "artifacts/HomiKey-$version-win-x64.exe"
+          Copy-Item publish/HomiKey.exe $exe
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $(Split-Path $exe -Leaf)" | Out-File -Encoding ascii "$exe.sha256"
+          Get-ChildItem artifacts
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $files = (Get-ChildItem artifacts).FullName
+          $extra = @()
+          if ($tag -match "-") { $extra += "--prerelease" }
+          gh release create $tag @files --title "HomiKey $tag" --generate-notes @extra

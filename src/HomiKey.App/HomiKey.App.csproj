@@ -31,7 +31,8 @@
     <EmbeddedResource Include="Assets\homikey-off.ico" LogicalName="HomiKey.Assets.homikey-off.ico" />
     <EmbeddedResource Include="Assets\Fonts\Vazirmatn-Regular.ttf" LogicalName="HomiKey.Assets.Vazirmatn-Regular.ttf" />
     <EmbeddedResource Include="Assets\Fonts\Vazirmatn-Bold.ttf" LogicalName="HomiKey.Assets.Vazirmatn-Bold.ttf" />
-    <None Include="Assets\Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" Link="Vazirmatn-OFL.txt" />
+    <!-- The font license travels inside the exe with the fonts, so the single-file build stays one file. -->
+    <EmbeddedResource Include="Assets\Fonts\OFL.txt" LogicalName="HomiKey.Assets.Vazirmatn-OFL.txt" />
   </ItemGroup>
 
   <ItemGroup>
