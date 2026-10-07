@@ -105,7 +105,7 @@ web/                      static web version (GitHub Pages)
 
 ### Releases
 
-Pushing a tag such as `v1.0.0` runs the release workflow: it runs the tests, builds the self-contained single-file `win-x64` exe and attaches it, with its SHA-256, to a new GitHub Release. The web version is deployed to GitHub Pages whenever `web/` changes on `main` (enable Pages with source "GitHub Actions" in the repository settings first).
+Pushing a tag such as `v1.0.0` runs the release workflow: it runs the tests, builds the self-contained single-file `win-x64` exe and attaches it, with its SHA-256, to a new GitHub Release. The web version is deployed to GitHub Pages by running the *Web version (GitHub Pages)* workflow by hand from the Actions tab. Enable Pages with source "GitHub Actions" in the repository settings first; that needs a public repository or a paid plan.
 
 ## FAQ
 

@@ -1,11 +1,9 @@
 name: Web version (GitHub Pages)
 
+# Manual only: GitHub Pages is not enabled for this repository yet (it needs a public
+# repository or a paid plan). Once it is, run this from the Actions tab, or add a
+# push trigger on main for web/** to deploy automatically.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "web/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
