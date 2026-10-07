@@ -14,12 +14,20 @@ internal sealed class ClipboardSnapshot
     private const string CanIncludeInHistory = "CanIncludeInClipboardHistory";
     private const string CanUploadToCloud = "CanUploadToCloudClipboard";
 
+    private const string VisualStudioLineCopy = "VisualStudioEditorOperationsLineCutCopyClipboardTag";
+    private const string VisualStudioLineSelect = "MSDEVLineSelect";
+    private const string ChromiumCustomData = "Chromium Web Custom MIME Data Format";
+
     private readonly DataObject? _data;
 
     private ClipboardSnapshot(DataObject? data) => _data = data;
 
-    /// <summary>Copies every format that can be read. Formats that refuse to be read are skipped.</summary>
-    public static ClipboardSnapshot Capture()
+    /// <summary>
+    /// Copies every format that can be read. Formats that refuse to be read are skipped.
+    /// Returns null when the clipboard itself cannot be opened (another app holds it), which
+    /// is different from an empty clipboard: the caller must then leave the clipboard alone.
+    /// </summary>
+    public static ClipboardSnapshot? TryCapture()
     {
         try
         {
@@ -46,7 +54,7 @@ internal sealed class ClipboardSnapshot
         }
         catch (ExternalException)
         {
-            return new ClipboardSnapshot(null);
+            return null;
         }
     }
 
@@ -76,6 +84,34 @@ internal sealed class ClipboardSnapshot
         data.SetData(DataFormats.UnicodeText, autoConvert: false, text);
         MarkPrivate(data);
         Clipboard.SetDataObject(data, copy: true, retryTimes: 10, retryDelay: 50);
+    }
+
+    /// <summary>
+    /// True when the clipboard holds a whole line that a code editor copied because Ctrl+C was
+    /// pressed with nothing selected (Visual Studio, VS Code), rather than a real selection.
+    /// </summary>
+    public static bool IsEditorLineCopy()
+    {
+        try
+        {
+            var data = Clipboard.GetDataObject();
+            if (data is null) return false;
+            // Visual Studio marks a whole-line copy with one of these formats.
+            if (data.GetDataPresent(VisualStudioLineCopy, autoConvert: false) || data.GetDataPresent(VisualStudioLineSelect, autoConvert: false))
+                return true;
+            // VS Code stores {"isFromEmptySelection":true,...} under its own MIME type, which
+            // Chromium keeps in one blob of UTF-16 strings.
+            if (data.GetDataPresent(ChromiumCustomData, autoConvert: false) &&
+                data.GetData(ChromiumCustomData, autoConvert: false) is MemoryStream stream)
+            {
+                var text = System.Text.Encoding.Unicode.GetString(stream.ToArray());
+                return text.Contains("\"isFromEmptySelection\":true", StringComparison.Ordinal);
+            }
+        }
+        catch (Exception ex) when (ex is ExternalException or NotSupportedException or InvalidOperationException)
+        {
+        }
+        return false;
     }
 
     /// <summary>Empties the clipboard so a following copy can be detected.</summary>

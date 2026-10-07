@@ -163,10 +163,14 @@ internal sealed class TrayApplicationContext : ApplicationContext
         {
             await _replacer.RunAsync(mode, hotkey, _settings);
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is ClipboardUnavailableException or System.Runtime.InteropServices.ExternalException)
         {
-            // Usually the clipboard was locked by another app. A tray app must not die over
-            // that; the user can simply press the hotkey again.
+            _tray.ShowBalloonTip(5000, Strings.AppName, Strings.ClipboardBusy, ToolTipIcon.Warning);
+        }
+        catch (Exception ex)
+        {
+            // A tray app must not die over one failed conversion; say what went wrong instead.
+            _tray.ShowBalloonTip(8000, Strings.AppName, string.Format(Strings.ConversionFailed, ex.Message), ToolTipIcon.Error);
         }
     }
 

@@ -53,6 +53,15 @@ public class ConversionEngineTests
     }
 
     [Fact]
+    public void ClockSetBackDoesNotRevert()
+    {
+        var engine = new ConversionEngine();
+        var first = engine.ConvertSelection("Hello", T0)!;
+        var second = engine.ConvertSelection(first.Replacement, T0.AddHours(-1))!;
+        Assert.False(second.IsRevert);
+    }
+
+    [Fact]
     public void NothingToChangeReturnsNull()
     {
         var engine = new ConversionEngine();

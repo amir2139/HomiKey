@@ -186,4 +186,13 @@ Persian interface font: Vazirmatn, SIL Open Font License 1.1.</value>
   <data name="ConvertHotkeyRequired" xml:space="preserve">
     <value>The convert hotkey cannot be empty.</value>
   </data>
+  <data name="ClipboardBusy" xml:space="preserve">
+    <value>Another program is using the clipboard right now, so nothing was changed. Try again in a moment.</value>
+  </data>
+  <data name="ConversionFailed" xml:space="preserve">
+    <value>The text could not be converted.
+
+{0}</value>
+    <comment>{0} is the error message.</comment>
+  </data>
 </root>

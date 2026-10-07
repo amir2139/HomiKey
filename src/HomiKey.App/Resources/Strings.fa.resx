@@ -176,4 +176,12 @@
   <data name="ConvertHotkeyRequired" xml:space="preserve">
     <value>کلید میان‌بر تبدیل نمی‌تواند خالی باشد.</value>
   </data>
+  <data name="ClipboardBusy" xml:space="preserve">
+    <value>برنامهٔ دیگری الان از کلیپ‌بورد استفاده می‌کند، برای همین چیزی تغییر نکرد. چند لحظه بعد دوباره امتحان کنید.</value>
+  </data>
+  <data name="ConversionFailed" xml:space="preserve">
+    <value>متن تبدیل نشد.
+
+{0}</value>
+  </data>
 </root>

@@ -116,13 +116,13 @@ Check that the tray icon is blue (enabled) and that the program isn't in the exc
 Open Settings and check *My Persian keyboard layout*. HomiKey guesses it from the installed layouts on first run. You can see yours in Windows Settings → Time & language → Language & region → Persian → Language options.
 
 **Why does HomiKey use the clipboard?**
-Copy and paste is the one way to read and replace selected text that works in nearly every Windows program. HomiKey saves what was on the clipboard and restores it right after pasting, and marks its own temporary text so Windows clipboard history skips it.
+Copy and paste is the one way to read and replace selected text that works in nearly every Windows program. HomiKey saves what was on the clipboard and restores it right after pasting, and marks its own temporary text so Windows clipboard history skips it. If something else is copied during that moment, HomiKey keeps the new content instead. A few special formats that the source program only produces on request (such as Office "paste link" data) cannot be saved, so after a conversion they are gone from the clipboard; plain text, rich text, images and files come back.
 
 **Why is the terminal excluded?**
 In a terminal, Ctrl+C with nothing selected stops the running program. Remove the terminal from the exclude list if you only ever use HomiKey there on a selection.
 
-**In VS Code (or Visual Studio) with nothing selected, a whole line gets duplicated.**
-These editors copy the whole line when you press Ctrl+C with nothing selected. Either select the text first, or turn that off (VS Code: `"editor.emptySelectionClipboard": false`).
+**In a code editor with nothing selected, a whole line gets duplicated.**
+These editors copy the whole line when you press Ctrl+C with nothing selected. HomiKey recognizes this in Visual Studio and VS Code and converts the last word instead. Other editors that do the same (for example JetBrains IDEs) are not recognized; select the text first there, or turn the line copy off in the editor's settings.
 
 **Converting the last word removed formatting in Word.**
 To fix the last word, HomiKey selects back to the start of the line and pastes that span back with only the last word changed. This behaves the same in left-to-right and right-to-left text, but in rich editors the pasted part is plain text. Select the word first to keep formatting.

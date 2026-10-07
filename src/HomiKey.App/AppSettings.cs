@@ -62,6 +62,20 @@ public sealed class AppSettings
         processName is not null &&
         ExcludedApps.Any(e => string.Equals(ForegroundApp.Normalize(e), ForegroundApp.Normalize(processName), StringComparison.Ordinal));
 
+    /// <summary>
+    /// Fills in values a hand-edited settings file may have set to null, so the rest of the
+    /// app can rely on them.
+    /// </summary>
+    public AppSettings Normalize()
+    {
+        Language ??= LanguageSystem;
+        ConvertHotkey ??= DefaultConvertHotkey.ToString();
+        LastWordHotkey ??= string.Empty;
+        ExcludedApps ??= [.. DefaultExcludedApps];
+        ExcludedApps.RemoveAll(string.IsNullOrWhiteSpace);
+        return this;
+    }
+
     public AppSettings Clone() => JsonSerializer.Deserialize<AppSettings>(JsonSerializer.Serialize(this, SettingsStore.JsonOptions), SettingsStore.JsonOptions)!;
 }
 
@@ -85,7 +99,7 @@ public static class SettingsStore
         try
         {
             if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), JsonOptions) ?? new AppSettings();
+                return (JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), JsonOptions) ?? new AppSettings()).Normalize();
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {

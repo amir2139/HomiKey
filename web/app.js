@@ -19,7 +19,9 @@ const store = {
   },
 };
 
-let language = store.get("lang") ?? ((navigator.languages ?? [navigator.language]).some((l) => /^fa\b/i.test(l)) ? "fa" : "en");
+const savedLanguage = store.get("lang");
+let language = savedLanguage && Object.hasOwn(strings, savedLanguage) ? savedLanguage
+  : (navigator.languages ?? [navigator.language]).some((l) => /^fa\b/i.test(l)) ? "fa" : "en";
 let copiedTimer = 0;
 
 function t(key) {

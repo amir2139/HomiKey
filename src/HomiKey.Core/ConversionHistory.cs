@@ -20,7 +20,12 @@ public sealed class ConversionHistory
     public TimeSpan Window { get; }
 
     /// <summary>Whether a conversion is remembered and still inside the window.</summary>
-    public bool HasRecent(DateTimeOffset now) => _converted is not null && now - _at <= Window;
+    public bool HasRecent(DateTimeOffset now)
+    {
+        var elapsed = now - _at;
+        // A negative elapsed time means the clock was set back; treat that as expired.
+        return _converted is not null && elapsed >= TimeSpan.Zero && elapsed <= Window;
+    }
 
     /// <summary>Remembers that <paramref name="original"/> was replaced by <paramref name="converted"/>.</summary>
     public void Record(string original, string converted, DateTimeOffset now)

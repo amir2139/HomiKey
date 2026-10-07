@@ -11,6 +11,7 @@ internal sealed class TextReplacer
 {
     // How long the target app gets to put the selection on the clipboard after Ctrl+C.
     private static readonly TimeSpan CopyTimeout = TimeSpan.FromMilliseconds(600);
+    private static readonly TimeSpan RetryCopyTimeout = TimeSpan.FromMilliseconds(1200);
 
     // How long the target app gets to read the clipboard after Ctrl+V before it is restored.
     // Restoring too early makes some apps paste the old clipboard instead.
@@ -42,22 +43,32 @@ internal sealed class TextReplacer
 
             await KeyboardInput.WaitForKeysReleasedAsync(pressed.Key, TimeSpan.FromSeconds(1.5));
 
-            var snapshot = ClipboardSnapshot.Capture();
-            var pasted = false;
+            // If the clipboard cannot be read now, do nothing: restoring a snapshot we failed
+            // to take would wipe what the user had copied.
+            var snapshot = ClipboardSnapshot.TryCapture()
+                ?? throw new ClipboardUnavailableException();
+            uint? pastedSequence = null;
             try
             {
                 var result = await ConvertAsync(mode, settings);
                 if (result is null) return;
 
-                await PasteAsync(result.Value.Text);
-                pasted = true;
+                pastedSequence = await PasteAsync(result.Value.Text);
                 if (settings.SwitchInputLanguage && result.Value.Script is { } script)
                     InputLanguages.SwitchTo(window, script);
             }
             finally
             {
-                if (pasted) await Task.Delay(PasteSettleTime);
-                snapshot.Restore();
+                if (pastedSequence is { } sequence)
+                {
+                    await Task.Delay(PasteSettleTime);
+                    // Something new was copied while the target app was pasting; keep it.
+                    if (NativeMethods.GetClipboardSequenceNumber() == sequence) snapshot.Restore();
+                }
+                else
+                {
+                    snapshot.Restore();
+                }
             }
         }
         finally
@@ -73,7 +84,9 @@ internal sealed class TextReplacer
 
         if (mode == Mode.Selection)
         {
-            var selected = await CopyAsync(KeyboardInput.CtrlC);
+            var selected = await CopyAsync(CopyTimeout, KeyboardInput.CtrlC);
+            // Code editors copy the whole line when nothing is selected; that is not a selection.
+            if (selected.Length > 0 && ClipboardSnapshot.IsEditorLineCopy()) selected = string.Empty;
             if (selected.Length > 0)
             {
                 var result = _engine.ConvertSelection(selected, now);
@@ -85,7 +98,11 @@ internal sealed class TextReplacer
         // Nothing selected: select back to the start of the line and work on that text.
         // Replacing the whole line-to-caret span, rather than moving the caret with arrow
         // keys, behaves the same in left-to-right and right-to-left text.
-        var beforeCaret = await CopyAsync(KeyboardInput.ShiftHome, KeyboardInput.CtrlC);
+        var beforeCaret = await CopyAsync(CopyTimeout, KeyboardInput.ShiftHome, KeyboardInput.CtrlC);
+        // Empty usually means the caret was at the start of the line. It can also mean a slow
+        // app missed the copy, which would leave the Shift+Home selection behind for the next
+        // keystroke to overwrite, so ask once more with more time.
+        if (beforeCaret.Length == 0) beforeCaret = await CopyAsync(RetryCopyTimeout, KeyboardInput.CtrlC);
         if (beforeCaret.Length == 0) return null;
 
         var converted = _engine.ConvertBeforeCaret(beforeCaret, now);
@@ -95,7 +112,7 @@ internal sealed class TextReplacer
     }
 
     /// <summary>Sends the given keys and returns the text the app put on the clipboard, or "".</summary>
-    private static async Task<string> CopyAsync(params Action[] keys)
+    private static async Task<string> CopyAsync(TimeSpan timeout, params Action[] keys)
     {
         ClipboardSnapshot.Clear();
         var sequence = NativeMethods.GetClipboardSequenceNumber();
@@ -105,7 +122,7 @@ internal sealed class TextReplacer
             await Task.Delay(20);
         }
 
-        var deadline = DateTime.UtcNow + CopyTimeout;
+        var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
             if (NativeMethods.GetClipboardSequenceNumber() != sequence)
@@ -119,10 +136,18 @@ internal sealed class TextReplacer
         return string.Empty;
     }
 
-    private static async Task PasteAsync(string text)
+    /// <summary>Pastes <paramref name="text"/>; returns the clipboard sequence number it pasted from.</summary>
+    private static async Task<uint> PasteAsync(string text)
     {
         ClipboardSnapshot.SetText(text);
+        var sequence = NativeMethods.GetClipboardSequenceNumber();
         await Task.Delay(20);
         KeyboardInput.CtrlV();
+        return sequence;
     }
+}
+
+/// <summary>Another app is holding the clipboard open, so HomiKey cannot safely use it right now.</summary>
+internal sealed class ClipboardUnavailableException : Exception
+{
 }
