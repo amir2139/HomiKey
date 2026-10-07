@@ -10,7 +10,15 @@ internal static class Program
     private static void Main(string[] args)
     {
         using var mutex = new Mutex(initiallyOwned: true, MutexName, out var isFirstInstance);
-        if (!isFirstInstance) return;
+        if (!isFirstInstance)
+        {
+            // Already running: ask that copy to open its settings window.
+            if (EventWaitHandle.TryOpenExisting(TrayApplicationContext.ShowSettingsEventName, out var signal))
+            {
+                using (signal) signal.Set();
+            }
+            return;
+        }
 
         ApplicationConfiguration.Initialize();
 

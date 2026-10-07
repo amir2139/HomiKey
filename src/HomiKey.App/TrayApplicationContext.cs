@@ -10,17 +10,27 @@ internal sealed class TrayApplicationContext : ApplicationContext
 {
     private const int ConvertHotkeyId = 1;
     private const int LastWordHotkeyId = 2;
+    public const string ShowSettingsEventName = @"Local\HomiKey.ShowSettings";
 
     private readonly NotifyIcon _tray;
     private readonly ContextMenuStrip _menu = new();
     private readonly ToolStripMenuItem _enabledItem = new();
+    private readonly ToolStripMenuItem _settingsItem = new();
+    private readonly ToolStripMenuItem _languageItem = new();
+    private readonly ToolStripMenuItem _languageSystemItem = new() { Tag = AppSettings.LanguageSystem };
+    private readonly ToolStripMenuItem _languageEnglishItem = new() { Tag = AppSettings.LanguageEnglish, RightToLeft = RightToLeft.No };
+    private readonly ToolStripMenuItem _languagePersianItem = new() { Tag = AppSettings.LanguagePersian, RightToLeft = RightToLeft.Yes };
     private readonly ToolStripMenuItem _startupItem = new();
     private readonly ToolStripMenuItem _aboutItem = new();
     private readonly ToolStripMenuItem _exitItem = new();
     private readonly HotkeyWindow _hotkeys = new();
     private readonly ConversionEngine _engine;
     private readonly TextReplacer _replacer;
+    private readonly SynchronizationContext _ui;
+    private readonly EventWaitHandle _showSettingsSignal;
+    private readonly RegisteredWaitHandle _showSettingsWait;
     private AppSettings _settings;
+    private SettingsForm? _settingsForm;
 
     public TrayApplicationContext(AppSettings settings, bool launchedAtStartup)
     {
@@ -30,7 +40,17 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         BuildMenu();
         _tray = new NotifyIcon { ContextMenuStrip = _menu, Visible = true };
+        _tray.MouseDoubleClick += (_, e) =>
+        {
+            if (e.Button == MouseButtons.Left) ShowSettings();
+        };
         _hotkeys.HotkeyPressed += OnHotkey;
+
+        // Starting HomiKey again while it runs opens the settings of the running copy.
+        _ui = SynchronizationContext.Current ?? new WindowsFormsSynchronizationContext();
+        _showSettingsSignal = new EventWaitHandle(false, EventResetMode.AutoReset, ShowSettingsEventName);
+        _showSettingsWait = ThreadPool.RegisterWaitForSingleObject(
+            _showSettingsSignal, (_, _) => _ui.Post(_ => ShowSettings(), null), null, Timeout.Infinite, executeOnlyOnce: false);
         Localization.Changed += ApplyStrings;
 
         ApplyStrings();
@@ -54,6 +74,18 @@ internal sealed class TrayApplicationContext : ApplicationContext
             ApplySettings();
         };
 
+        _settingsItem.Click += (_, _) => ShowSettings();
+        foreach (var item in new[] { _languageSystemItem, _languageEnglishItem, _languagePersianItem })
+        {
+            item.Click += (_, _) => ChangeLanguage((string)item.Tag!);
+            _languageItem.DropDownItems.Add(item);
+        }
+        _languageItem.DropDownOpening += (_, _) =>
+        {
+            foreach (ToolStripMenuItem item in _languageItem.DropDownItems)
+                item.Checked = (string)item.Tag! == _settings.Language;
+        };
+
         _startupItem.Click += (_, _) => ToggleStartup();
         _aboutItem.Click += (_, _) => ShowAbout();
         _exitItem.Click += (_, _) => ExitThread();
@@ -61,8 +93,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _menu.Opening += (_, _) => _startupItem.Checked = StartupRegistration.IsEnabled;
         _menu.Items.AddRange(new ToolStripItem[]
         {
+            _settingsItem,
             _enabledItem,
             new ToolStripSeparator(),
+            _languageItem,
             _startupItem,
             _aboutItem,
             new ToolStripSeparator(),
@@ -73,7 +107,13 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private void ApplyStrings()
     {
         Localization.ApplyTo(_menu);
+        _settingsItem.Font = Localization.UiFont(style: FontStyle.Bold);
+        _settingsItem.Text = Strings.MenuSettings;
         _enabledItem.Text = Strings.MenuEnabled;
+        _languageItem.Text = Strings.MenuLanguage;
+        _languageSystemItem.Text = Strings.LanguageSystem;
+        _languageEnglishItem.Text = Strings.LanguageEnglish;
+        _languagePersianItem.Text = Strings.LanguagePersian;
         _startupItem.Text = Strings.MenuRunAtStartup;
         _aboutItem.Text = Strings.MenuAbout;
         _exitItem.Text = Strings.MenuExit;
@@ -130,6 +170,38 @@ internal sealed class TrayApplicationContext : ApplicationContext
         }
     }
 
+    private void ShowSettings()
+    {
+        if (_settingsForm is { IsDisposed: false })
+        {
+            _settingsForm.Activate();
+            return;
+        }
+
+        // While the window is open the hotkeys are released, so they can be recorded in it.
+        _hotkeys.UnregisterAll();
+        _settingsForm = new SettingsForm(_settings, edited =>
+        {
+            SettingsStore.Save(edited);
+            _settings = edited;
+        });
+        _settingsForm.FormClosed += (_, _) =>
+        {
+            _settingsForm = null;
+            Localization.Apply(_settings.Language);
+            ApplySettings();
+        };
+        _settingsForm.Show();
+        _settingsForm.Activate();
+    }
+
+    private void ChangeLanguage(string language)
+    {
+        _settings.Language = language;
+        TrySave();
+        Localization.Apply(language);
+    }
+
     private void ToggleStartup()
     {
         try
@@ -163,6 +235,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
     protected override void ExitThreadCore()
     {
         Localization.Changed -= ApplyStrings;
+        _showSettingsWait.Unregister(null);
+        _showSettingsSignal.Dispose();
+        _settingsForm?.Close();
         _hotkeys.Dispose();
         _tray.Visible = false;
         _tray.Dispose();

@@ -33,12 +33,18 @@ public readonly record struct Hotkey(HotkeyModifiers Modifiers, Keys Key)
     public override string ToString()
     {
         if (IsNone) return string.Empty;
-        var parts = new List<string>(5);
+        var modifiers = ModifiersText();
+        return modifiers.Length == 0 ? KeyName(Key) : modifiers + "+" + KeyName(Key);
+    }
+
+    /// <summary>Just the modifier part, like "Ctrl+Shift".</summary>
+    public string ModifiersText()
+    {
+        var parts = new List<string>(4);
         if (Modifiers.HasFlag(HotkeyModifiers.Control)) parts.Add("Ctrl");
         if (Modifiers.HasFlag(HotkeyModifiers.Alt)) parts.Add("Alt");
         if (Modifiers.HasFlag(HotkeyModifiers.Shift)) parts.Add("Shift");
         if (Modifiers.HasFlag(HotkeyModifiers.Win)) parts.Add("Win");
-        parts.Add(KeyName(Key));
         return string.Join("+", parts);
     }
 
